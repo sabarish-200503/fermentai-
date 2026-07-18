@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FermentAI — AI-Powered Bioreactor Advisor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--green:#1a7a4a;--green-mid:#2ea86a;--green-light:#d4f0e2;--green-pale:#f0faf5;--dark:#0e1a14;--text:#1a2e22;--text-muted:#5a7a65;--amber:#c47a1a;--amber-light:#fef3dc;--coral:#c44a2a;--coral-light:#fdeee9;--border:rgba(26,122,74,0.15);--off-white:#f8fdf9}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text);overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:64px;background:rgba(248,253,249,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:34px;height:34px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:15px}
+.nav-logo-text{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{text-decoration:none;font-size:14px;color:var(--text-muted);transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.nav-cta{background:var(--green);color:white;padding:8px 20px;border-radius:100px;text-decoration:none;font-size:14px;font-weight:500}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 5vw 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 10%,rgba(46,168,106,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 85% 60%,rgba(26,122,74,.07) 0%,transparent 60%)}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);padding:6px 16px;border-radius:100px;font-size:12px;font-weight:500;margin-bottom:2rem;position:relative;z-index:1;border:1px solid rgba(26,122,74,.2);animation:fadeUp .6s ease both}
+.dot{width:6px;height:6px;background:var(--green-mid);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,6vw,5rem);line-height:1.1;color:var(--dark);max-width:800px;margin-bottom:1.5rem;position:relative;z-index:1;animation:fadeUp .6s .1s ease both}
+.hero h1 em{color:var(--green);font-style:italic}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:2.5rem;font-weight:300;position:relative;z-index:1;animation:fadeUp .6s .2s ease both}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.btn-primary{background:var(--green);color:white;padding:14px 32px;border-radius:100px;text-decoration:none;font-size:15px;font-weight:500;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(26,122,74,.3);transition:all .2s}
+.btn-primary:hover{background:var(--dark);transform:translateY(-2px)}
+.btn-secondary{background:white;color:var(--text);padding:14px 32px;border-radius:100px;text-decoration:none;font-size:15px;border:1px solid var(--border);display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-secondary:hover{border-color:var(--green);color:var(--green)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;position:relative;z-index:1;flex-wrap:wrap;justify-content:center}
+.hero-stat-num{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--green)}
+.hero-stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.section{padding:6rem 5vw}
+.section-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:1rem;display:block}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3rem);color:var(--dark);line-height:1.2;margin-bottom:1rem;max-width:600px}
+.section-sub{font-size:1.05rem;color:var(--text-muted);max-width:520px;line-height:1.7;font-weight:300}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+.feature-card{background:white;border:1px solid var(--border);border-radius:16px;padding:1.75rem;transition:all .25s;position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--green-mid));opacity:0;transition:opacity .25s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(26,122,74,.1)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{width:44px;height:44px;background:var(--green-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--green);margin-bottom:1rem}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--dark)}
+.feature-card p{font-size:14px;color:var(--text-muted);line-height:1.7;font-weight:300}
+.how-section{background:var(--dark)}
+.how-section .section-title{color:white}
+.how-section .section-sub{color:rgba(255,255,255,.5)}
+.how-section .section-tag{color:var(--green-mid)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;margin-top:3rem}
+.step-num{font-family:'DM Serif Display',serif;font-size:4rem;color:rgba(46,168,106,.15);line-height:1;margin-bottom:.5rem}
+.step h3{font-size:1rem;font-weight:500;margin-bottom:.5rem;color:white}
+.step p{font-size:14px;color:rgba(255,255,255,.45);line-height:1.7;font-weight:300}
+.tool-section{background:white}
+.tool-wrapper{max-width:860px;margin:3rem auto 0;background:var(--off-white);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.tool-topbar{background:white;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:8px}
+.tb-dot{width:10px;height:10px;border-radius:50%}
+.tool-url{flex:1;background:var(--off-white);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:12px;color:var(--text-muted);margin:0 1rem}
+.tool-inner{padding:2rem}
+.tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:var(--green-pale);padding:4px;border-radius:10px}
+.tab{flex:1;padding:9px 12px;border:none;background:none;cursor:pointer;font-size:13px;color:var(--text-muted);border-radius:7px;transition:all .2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab.active{background:white;color:var(--green);font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.panel{display:none}.panel.active{display:block}
+.slabel{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+select.org-sel{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;margin-bottom:1.5rem;appearance:none;cursor:pointer}
+select.org-sel:focus{outline:none;border-color:var(--green)}
+.params-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem}
+.param-card{background:white;border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.param-label{font-size:11px;color:var(--text-muted);margin-bottom:4px}
+.param-value{font-size:22px;font-weight:600;color:var(--dark);font-family:'DM Serif Display',serif}
+.param-unit{font-size:11px;color:var(--text-muted)}
+.badge-row{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.badge{font-size:11px;padding:4px 10px;border-radius:100px;font-weight:500;display:inline-flex;align-items:center;gap:4px}
+.badge-ok{background:var(--green-light);color:var(--green)}
+.badge-warn{background:var(--amber-light);color:var(--amber)}
+.badge-danger{background:var(--coral-light);color:var(--coral)}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.slider-row label{font-size:13px;color:var(--text-muted);min-width:130px}
+input[type=range]{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--green-light);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--green);cursor:pointer;border:2px solid white;box-shadow:0 0 0 1px var(--green)}
+.slider-val{font-size:13px;font-weight:500;min-width:64px;text-align:right;color:var(--dark)}
+.ai-btn{width:100%;padding:12px;background:var(--green);color:white;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.ai-btn:hover{background:var(--dark);transform:translateY(-1px)}
+.ai-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.result-box{margin-top:1.25rem;background:white;border:1px solid var(--border);border-radius:12px;padding:1.25rem;display:none}
+.result-text{font-size:14px;color:var(--text);line-height:1.85;white-space:pre-wrap}
+.result-error{font-size:14px;color:var(--coral);line-height:1.6}
+.loading-row{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:14px}
+.spinner{width:18px;height:18px;border:2px solid var(--green-light);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.symptoms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin-bottom:1.25rem}
+.symptom-btn{padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:white;font-size:13px;color:var(--text-muted);cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.symptom-btn:hover{border-color:var(--green);color:var(--green)}
+.symptom-btn.selected{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:500}
+textarea.custom-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);font-size:14px;margin-bottom:1.25rem;resize:vertical;font-family:'DM Sans',sans-serif;line-height:1.6}
+textarea.custom-input:focus{outline:none;border-color:var(--green)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.about-card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+.about-card h4{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.about-card ul{list-style:none}
+.about-card ul li{font-size:13px;color:var(--text-muted);padding:5px 0;display:flex;justify-content:space-between;border-bottom:1px solid var(--green-pale)}
+.about-card ul li:last-child{border:none}
+.about-card ul li span{color:var(--dark);font-weight:500}
+.proposal-box{background:var(--green-pale);border:1px solid rgba(26,122,74,.2);border-radius:12px;padding:1.25rem;margin-top:1rem}
+.proposal-box h4{font-size:13px;font-weight:600;color:var(--green);margin-bottom:8px}
+.proposal-box p{font-size:13px;color:var(--text-muted);line-height:1.7;font-style:italic}
+.cta-section{text-align:center;padding:6rem 5vw;background:linear-gradient(135deg,var(--dark) 0%,#0a2010 100%);color:white}
+.cta-section .section-title{color:white;margin:0 auto 1rem}
+.cta-section .section-sub{color:rgba(255,255,255,.5);margin:0 auto 2.5rem}
+.cta-badges{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.cta-badge{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:8px 18px;border-radius:100px;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+footer{background:#1c2e24;color:rgba(255,255,255,.4);padding:2rem 5vw;text-align:center;font-size:13px}
+footer a{color:var(--green-mid);text-decoration:none}
+@media(max-width:640px){.nav-links{display:none}.hero-stats{gap:1.5rem}.about-grid{grid-template-columns:1fr}.slider-row label{min-width:90px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon"><i class="fa-solid fa-flask-vial"></i></div>
+    <span class="nav-logo-text">FermentAI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#tool">Try it</a></li>
+  </ul>
+  <a href="#tool" class="nav-cta">Launch Tool →</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge"><div class="dot"></div> AI-Powered Bioprocess Tool</div>
+  <h1>Smart decisions for your <em>fermentation</em> runs</h1>
+  <p class="hero-sub">FermentAI combines bioprocess engineering knowledge with AI to help you optimize parameters, troubleshoot problems, and improve yields — in real time.</p>
+  <div class="hero-actions">
+    <a href="#tool" class="btn-primary"><i class="fa-solid fa-flask-vial"></i> Try the tool free</a>
+    <a href="#features" class="btn-secondary"><i class="fa-solid fa-circle-info"></i> Learn more</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">6+</div><div class="hero-stat-label">Organisms</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">10+</div><div class="hero-stat-label">Fault diagnostics</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">AI</div><div class="hero-stat-label">Claude-powered</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">Free</div><div class="hero-stat-label">No sign-up</div></div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <span class="section-tag">What it does</span>
+  <h2 class="section-title">Everything you need at the bench</h2>
+  <p class="section-sub">Built for bioprocess engineers, researchers, and students working with fermentation and bioreactors.</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-sliders"></i></div><h3>Parameter optimization</h3><p>Input your temperature, pH, dissolved oxygen, and agitation and get organism-specific AI recommendations instantly.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><h3>Fault diagnosis</h3><p>Describe symptoms like foam formation, DO crash, or stalled growth and get root cause analysis with corrective steps.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-circle-check"></i></div><h3>Real-time status badges</h3><p>Live indicators show whether your parameters are in the optimal range — green, amber, or red at a glance.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-bacteria"></i></div><h3>Multi-organism support</h3><p>Covers E. coli, S. cerevisiae, Lactobacillus, Aspergillus niger, CHO cells, and Bacillus subtilis.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-bolt"></i></div><h3>Instant AI answers</h3><p>Expert-level guidance in seconds rather than searching through textbooks or papers.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-graduation-cap"></i></div><h3>Built for research</h3><p>Developed as a Master's project in Bioprocess Engineering — grounded in fermentation science and kinetics theory.</p></div>
+  </div>
+</section>
+
+<section class="section how-section" id="how">
+  <span class="section-tag">Process</span>
+  <h2 class="section-title">How FermentAI works</h2>
+  <p class="section-sub">Simple workflow that fits right into your lab routine.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><h3>Select your organism</h3><p>Choose from six common fermentation organisms. Optimal parameter ranges load automatically.</p></div>
+    <div class="step"><div class="step-num">02</div><h3>Input your conditions</h3><p>Use the sliders to set your current temperature, pH, dissolved oxygen, and agitation speed.</p></div>
+    <div class="step"><div class="step-num">03</div><h3>Get AI recommendations</h3><p>The AI engine analyzes your parameters and gives actionable, science-backed advice instantly.</p></div>
+    <div class="step"><div class="step-num">04</div><h3>Troubleshoot problems</h3><p>Switch to the troubleshooter, select symptoms, and get a full diagnosis with corrective steps.</p></div>
+  </div>
+</section>
+
+<section class="section tool-section" id="tool">
+  <div style="text-align:center">
+    <span class="section-tag">Live tool</span>
+    <h2 class="section-title" style="margin:0 auto">Try FermentAI now</h2>
+    <p class="section-sub" style="margin:.75rem auto 0">No sign-up. No download. Runs in your browser.</p>
+  </div>
+  <div class="tool-wrapper">
+    <div class="tool-topbar">
+      <div class="tb-dot" style="background:#ff5f57"></div>
+      <div class="tb-dot" style="background:#febc2e"></div>
+      <div class="tb-dot" style="background:#28c840"></div>
+      <div class="tool-url">fermentai.vercel.app</div>
+      <i class="fa-solid fa-lock" style="font-size:11px;color:var(--text-muted)"></i>
+    </div>
+    <div class="tool-inner">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('advisor')"><i class="fa-solid fa-sliders"></i> Advisor</button>
+        <button class="tab" onclick="switchTab('troubleshooter')"><i class="fa-solid fa-wrench"></i> Troubleshooter</button>
+        <button class="tab" onclick="switchTab('about')"><i class="fa-solid fa-info-circle"></i> About</button>
+      </div>
+
+      <div class="panel active" id="panel-advisor">
+        <div class="slabel">Organism</div>
+        <select class="org-sel" id="organism" onchange="updateBadges()">
+          <option>E. coli (aerobic fermentation)</option>
+          <option>Saccharomyces cerevisiae (yeast fermentation)</option>
+          <option>Lactobacillus (lactic acid fermentation)</option>
+          <option>Aspergillus niger (fungal fermentation)</option>
+          <option>CHO cells (mammalian cell culture)</option>
+          <option>Bacillus subtilis</option>
+        </select>
+        <div class="slabel">Current parameters</div>
+        <div class="params-grid">
+          <div class="param-card"><div class="param-label">Temperature</div><div class="param-value" id="disp-temp">37</div><div class="param-unit">°C</div></div>
+          <div class="param-card"><div class="param-label">pH</div><div class="param-value" id="disp-ph">7.0</div><div class="param-unit">—</div></div>
+          <div class="param-card"><div class="param-label">Dissolved O₂</div><div class="param-value" id="disp-do">40</div><div class="param-unit">% sat.</div></div>
+          <div class="param-card"><div class="param-label">Agitation</div><div class="param-value" id="disp-rpm">200</div><div class="param-unit">RPM</div></div>
+        </div>
+        <div class="badge-row">
+          <span class="badge badge-ok" id="badge-temp"><i class="fa-solid fa-circle-check"></i> Temp OK</span>
+          <span class="badge badge-ok" id="badge-ph"><i class="fa-solid fa-circle-check"></i> pH OK</span>
+          <span class="badge badge-ok" id="badge-do"><i class="fa-solid fa-circle-check"></i> DO OK</span>
+        </div>
+        <div class="slider-row"><label>Temperature (°C)</label><input type="range" min="20" max="45" step="0.5" value="37" oninput="updateParam('temp',this.value)"><span class="slider-val" id="out-temp">37 °C</span></div>
+        <div class="slider-row"><label>pH</label><input type="range" min="4" max="9" step="0.1" value="7" oninput="updateParam('ph',this.value)"><span class="slider-val" id="out-ph">7.0</span></div>
+        <div class="slider-row"><label>Dissolved O₂ (%)</label><input type="range" min="0" max="100" step="1" value="40" oninput="updateParam('do',this.value)"><span class="slider-val" id="out-do">40 %</span></div>
+        <div class="slider-row"><label>Agitation (RPM)</label><input type="range" min="50" max="600" step="10" value="200" oninput="updateParam('rpm',this.value)"><span class="slider-val" id="out-rpm">200 RPM</span></div>
+        <button class="ai-btn" id="btn-adv" onclick="runAdvisor()"><i class="fa-solid fa-wand-magic-sparkles"></i> Get AI optimization advice</button>
+        <div class="result-box" id="res-adv"></div>
+      </div>
+
+      <div class="panel" id="panel-troubleshooter">
+        <div class="slabel">Select symptoms you are observing</div>
+        <div class="symptoms-grid">
+          <button class="symptom-btn" onclick="toggleS(this,'Excessive foam formation')"><i class="fa-solid fa-droplet"></i> Excessive foam</button>
+          <button class="symptom-btn" onclick="toggleS(this,'pH dropping too fast')"><i class="fa-solid fa-arrow-trend-down"></i> pH dropping fast</button>
+          <button class="symptom-btn" onclick="toggleS(this,'pH rising unexpectedly')"><i class="fa-solid fa-arrow-trend-up"></i> pH rising</button>
+          <button class="symptom-btn" onclick="toggleS(this,'Dissolved oxygen crash near zero')"><i class="fa-solid fa-wind"></i> DO crash</button>
+          <button class="symptom-btn" onclick="toggleS(this,'Low or stalled cell growth')"><i class="fa-solid fa-chart-line"></i> Stalled growth</button>
+          <button class="symptom-btn" onclick="toggleS(this,'Culture contamination suspected')"><i class="fa-solid fa-biohazard"></i> Contamination</button>
+          <button class="symptom-btn" onclick="toggleS(this,'High viscosity or mixing issues')"><i class="fa-solid fa-fill-drip"></i> High viscosity</button>
+          <button class="symptom-btn" onclick="toggleS(this,'Low product yield')"><i class="fa-solid fa-box-open"></i> Low yield</button>
+          <button class="symptom-btn" onclick="toggleS(this,'Temperature control failure')"><i class="fa-solid fa-temperature-arrow-up"></i> Temp failure</button>
+          <button class="symptom-btn" onclick="toggleS(this,'Cell lysis or death observed')"><i class="fa-solid fa-skull"></i> Cell death</button>
+        </div>
+        <div class="slabel">Additional details (optional)</div>
+        <textarea class="custom-input" id="custom-symptom" rows="3" placeholder="e.g. Foam appeared 4 hours into fed-batch. Using Pluronic F-68. Agitation at 300 RPM..."></textarea>
+        <button class="ai-btn" id="btn-trb" onclick="runTrouble()"><i class="fa-solid fa-kit-medical"></i> Diagnose and suggest fixes</button>
+        <div class="result-box" id="res-trb"></div>
+      </div>
+
+      <div class="panel" id="panel-about">
+        <div class="about-grid">
+          <div class="about-card"><h4><i class="fa-solid fa-layer-group"></i> Tech stack</h4><ul><li>Frontend <span>HTML+CSS+JS</span></li><li>AI engine <span>Claude API</span></li><li>Backend <span>Vercel Functions</span></li><li>Hosting <span>Vercel (free)</span></li></ul></div>
+          <div class="about-card"><h4><i class="fa-solid fa-flask"></i> Scope</h4><ul><li>Domain <span>Fermentation</span></li><li>Organisms <span>6 supported</span></li><li>Diagnostics <span>10+ faults</span></li><li>Type <span>AI Expert System</span></li></ul></div>
+        </div>
+        <div class="proposal-box"><h4><i class="fa-solid fa-graduation-cap"></i> Master's proposal title</h4><p>"Development of an AI-powered decision support system for fermentation process optimization and fault diagnosis in bioreactor operations"</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2 class="section-title">Ready to optimize your fermentation?</h2>
+  <p class="section-sub">Free to use. No account needed. Built for the bioprocess community.</p>
+  <div class="cta-badges">
+    <div class="cta-badge"><i class="fa-solid fa-circle-check"></i> 100% free</div>
+    <div class="cta-badge"><i class="fa-solid fa-shield-halved"></i> Secure API</div>
+    <div class="cta-badge"><i class="fa-solid fa-mobile-screen"></i> Mobile ready</div>
+    <div class="cta-badge"><i class="fa-solid fa-bolt"></i> Instant AI</div>
+  </div>
+  <a href="#tool" class="btn-primary" style="display:inline-flex"><i class="fa-solid fa-flask-vial"></i> Try FermentAI now</a>
+</section>
+
+<footer><p>Built for bioprocess research · FermentAI © 2025 · <a href="#tool">Try the tool</a></p></footer>
+
+<script>
+// ── STATE ──────────────────────────────────────────────
+const P={temp:37,ph:7.0,ox:40,rpm:200};
+const symptoms=new Set();
+const optima={
+  "E. coli (aerobic fermentation)":{temp:[35,39],ph:[6.8,7.5],ox:[20,80]},
+  "Saccharomyces cerevisiae (yeast fermentation)":{temp:[28,32],ph:[4.5,6.5],ox:[10,60]},
+  "Lactobacillus (lactic acid fermentation)":{temp:[35,40],ph:[5.5,7.0],ox:[0,20]},
+  "Aspergillus niger (fungal fermentation)":{temp:[28,35],ph:[3.5,6.0],ox:[30,80]},
+  "CHO cells (mammalian cell culture)":{temp:[36,38],ph:[7.0,7.4],ox:[30,60]},
+  "Bacillus subtilis":{temp:[35,40],ph:[6.5,7.5],ox:[20,70]}
+};
+
+// ── AI KNOWLEDGE BASE (works offline, no API needed) ──
+const KB={
+  assess(org,temp,ph,ox,rpm){
+    const o=optima[org];
+    const issues=[];
+    const good=[];
+    if(temp<o.temp[0])issues.push(`Temperature ${temp}°C is LOW — optimal range is ${o.temp[0]}–${o.temp[1]}°C. This slows enzyme kinetics and reduces growth rate (µ).`);
+    else if(temp>o.temp[1])issues.push(`Temperature ${temp}°C is HIGH — above ${o.temp[1]}°C risks protein denaturation and cell stress for ${org}.`);
+    else good.push(`✅ Temperature ${temp}°C is within optimal range (${o.temp[0]}–${o.temp[1]}°C).`);
+    if(ph<o.ph[0])issues.push(`pH ${ph} is LOW — optimal is ${o.ph[0]}–${o.ph[1]}. Acidic conditions can inhibit key metabolic enzymes.`);
+    else if(ph>o.ph[1])issues.push(`pH ${ph} is HIGH — above ${o.ph[1]} may cause alkaline stress and reduce nutrient uptake.`);
+    else good.push(`✅ pH ${ph} is optimal for ${org} (range: ${o.ph[0]}–${o.ph[1]}).`);
+    if(ox<o.ox[0])issues.push(`Dissolved oxygen ${ox}% is LOW — minimum ${o.ox[0]}% needed. Risk of oxygen limitation and metabolic byproduct accumulation.`);
+    else if(ox>o.ox[1])issues.push(`DO ${ox}% is HIGH — above ${o.ox[1]}% may cause oxidative stress. Consider reducing aeration.`);
+    else good.push(`✅ Dissolved oxygen ${ox}% is in optimal range (${o.ox[0]}–${o.ox[1]}%).`);
+    if(rpm<100)issues.push(`Agitation ${rpm} RPM is very LOW — poor mixing will cause DO gradients and substrate depletion zones.`);
+    else if(rpm>500)issues.push(`Agitation ${rpm} RPM is HIGH — excessive shear stress may damage cells, especially for CHO or fungal cultures.`);
+    else good.push(`✅ Agitation ${rpm} RPM is reasonable for most bioreactor configurations.`);
+    return{issues,good};
+  },
+  recommend(org,temp,ph,ox,rpm){
+    const o=optima[org];
+    const recs=[];
+    if(temp<o.temp[0])recs.push(`🔺 Increase temperature to ${o.temp[0]+1}°C to boost enzymatic activity and µmax.`);
+    if(temp>o.temp[1])recs.push(`🔻 Reduce temperature to ${o.temp[1]-0.5}°C immediately to prevent thermal inactivation.`);
+    if(ph<o.ph[0])recs.push(`🔺 Add base (NaOH or NH₄OH) to raise pH toward ${((o.ph[0]+o.ph[1])/2).toFixed(1)}.`);
+    if(ph>o.ph[1])recs.push(`🔻 Add acid (HCl or H₂SO₄) to lower pH toward ${((o.ph[0]+o.ph[1])/2).toFixed(1)}.`);
+    if(ox<o.ox[0])recs.push(`🔺 Increase aeration rate and/or agitation to boost DO above ${o.ox[0]}%.`);
+    if(rpm<150)recs.push(`🔺 Increase agitation to at least 150–200 RPM to improve oxygen mass transfer (kLa).`);
+    if(recs.length===0)recs.push(`🎯 Parameters look good! Focus on carbon source feeding strategy and monitor biomass OD600 closely.`);
+    recs.push(`📊 Monitor pH every 30 min and DO continuously. Log all parameters for your research data.`);
+    return recs;
+  }
+};
+
+const TROUBLE_KB={
+  "Excessive foam formation":{
+    causes:["Excess protein secretion from lysed cells","High aeration rate combined with proteinaceous media","Insufficient antifoam agent"],
+    actions:["Add antifoam agent (Antifoam 204 or Pluronic F-68) at 0.01–0.1% v/v","Reduce aeration rate by 20%","Check for cell lysis — take sample and check OD","Install foam trap if not present"],
+    prevent:["Add antifoam to media before inoculation","Use mechanical foam breaker","Monitor aeration vs. agitation ratio"]
+  },
+  "pH dropping too fast":{
+    causes:["High metabolic acid production (lactic acid, acetic acid)","Carbon source overflow metabolism","Insufficient pH control loop response"],
+    actions:["Increase base pump feed rate (NaOH/NH₄OH)","Reduce glucose feed rate if fed-batch","Check pH controller PID settings","Take sample for HPLC to check organic acids"],
+    prevent:["Use pH-stat control mode","Add more buffer capacity to media","Monitor carbon consumption rate"]
+  },
+  "pH rising unexpectedly":{
+    causes:["Carbon depletion — cells switching to amino acid catabolism","Ammonia accumulation from protein degradation","Loss of CO₂ stripping"],
+    actions:["Check residual glucose — may need to feed carbon source","Add acid (HCl) to correct pH","Verify CO₂ supply to headspace if applicable"],
+    prevent:["Use DO-stat or pH-stat feeding strategy","Monitor glucose online with biosensor"]
+  },
+  "Dissolved oxygen crash near zero":{
+    causes:["Exponential biomass growth exceeding oxygen transfer capacity","Blocked air filter reducing airflow","Agitator failure or foaming blocking impeller"],
+    actions:["Immediately increase agitation speed by 50–100 RPM","Increase airflow rate to maximum","Check air filter — replace if blocked","Consider oxygen enrichment of sparge gas","Reduce feed rate to slow growth"],
+    prevent:["Set DO cascade control to agitation and airflow","Monitor kLa regularly","Never let DO drop below 20% for aerobic organisms"]
+  },
+  "Low or stalled cell growth":{
+    causes:["Nutrient limitation (nitrogen, phosphate, trace elements)","Inoculum quality issue — low viability","pH or temperature outside optimal range","Contamination inhibiting growth"],
+    actions:["Check and supplement nitrogen source (urea or ammonium salts)","Verify pH and temperature are in optimal range","Check OD600 and viability stain (trypan blue)","Take sample for microscopy to check morphology","Test for contamination — plate on selective media"],
+    prevent:["Always use fresh high-viability inoculum (>90%)","Pre-warm media before inoculation","Verify all nutrient concentrations before start"]
+  },
+  "Culture contamination suspected":{
+    causes:["Breached aseptic technique during sampling","Faulty steam sterilization of connections","Contaminated inoculum or media"],
+    actions:["STOP the run — contamination usually cannot be rescued","Take sample immediately for microscopy and plating","Autoclave all waste before disposal (biosafety)","Document contamination event for records","Sterilize entire bioreactor system before next run"],
+    prevent:["Always flame sample ports before and after","Pressure test vessel before inoculation","Use sterile filters on all gas lines","Maintain positive pressure in vessel"]
+  },
+  "High viscosity or mixing issues":{
+    causes:["High biomass concentration causing non-Newtonian behavior","Extracellular polysaccharide production","Fungal pellet formation"],
+    actions:["Increase agitation gradually — check power draw","Consider adding low concentration of surfactant","For fungi: break pellets by brief homogenization","Reduce biomass by controlled bleed"],
+    prevent:["Use impeller type suited for viscous cultures (Rushton vs. pitched blade)","Monitor viscosity if possible","For fungi: control morphology with agitation strategy"]
+  },
+  "Low product yield":{
+    causes:["Suboptimal induction timing (for recombinant proteins)","Carbon source being diverted to growth vs. production","Product degradation by proteases"],
+    actions:["Review induction strategy — check OD at induction time","Shift temperature down 2–4°C post-induction to slow growth","Add protease inhibitors if product is protein","Optimize feed rate in fed-batch mode"],
+    prevent:["Develop two-stage strategy: growth phase then production phase","Use metabolic flux analysis to identify bottlenecks","Test multiple induction conditions in shake flasks first"]
+  },
+  "Temperature control failure":{
+    causes:["Heating/cooling jacket malfunction","Temperature probe fouling or failure","Circulation pump failure"],
+    actions:["Switch to manual temperature control immediately","Check jacket inlet/outlet temperatures","Verify probe reading with external thermometer","If temp rising uncontrolled — reduce agitation and aeration (heat sources)","Consider emergency harvest if temp >2°C above optimal for >30 min"],
+    prevent:["Calibrate temperature probes before every run","Test heating/cooling response before inoculation","Have backup temperature probe ready"]
+  },
+  "Cell lysis or death observed":{
+    causes:["Excessive shear stress from over-agitation","Osmotic shock from media preparation error","pH or temperature excursion event","Contamination producing toxins"],
+    actions:["Immediately check pH and temperature logs for excursions","Reduce agitation speed","Take viability sample (trypan blue or PI staining)","Check osmolality of media","Review last 2 hours of process data for any deviations"],
+    prevent:["Set soft alarms on pH (±0.3), temp (±1°C), DO (<20%)","Never exceed recommended shear rates for cell type","Verify media osmolality before inoculation (280–320 mOsm for mammalian)"]
+  }
+};
+
+// ── UI FUNCTIONS ───────────────────────────────────────
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['advisor','troubleshooter','about'][i]===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
+}
+
+function updateParam(key,val){
+  const k=key==='do'?'ox':key;
+  P[k]=parseFloat(val);
+  const fmt={temp:v=>v+' °C',ph:v=>parseFloat(v).toFixed(1),do:v=>v+' %',rpm:v=>v+' RPM'};
+  document.getElementById('out-'+key).textContent=fmt[key](val);
+  document.getElementById('disp-'+(key==='do'?'do':key)).textContent=key==='ph'?parseFloat(val).toFixed(1):val;
+  updateBadges();
+}
+
+function updateBadges(){
+  const org=document.getElementById('organism').value;
+  const o=optima[org];
+  [{id:'badge-temp',val:P.temp,range:o.temp,label:'Temp'},{id:'badge-ph',val:P.ph,range:o.ph,label:'pH'},{id:'badge-do',val:P.ox,range:o.ox,label:'DO'}].forEach(c=>{
+    const el=document.getElementById(c.id);
+    const ok=c.val>=c.range[0]&&c.val<=c.range[1],low=c.val<c.range[0];
+    el.className='badge '+(ok?'badge-ok':low?'badge-warn':'badge-danger');
+    el.innerHTML=(ok?'<i class="fa-solid fa-circle-check"></i>':low?'<i class="fa-solid fa-triangle-exclamation"></i>':'<i class="fa-solid fa-circle-exclamation"></i>')+' '+c.label+(ok?' OK':low?' Low':' High');
+  });
+}
+
+function toggleS(btn,label){
+  if(symptoms.has(label)){symptoms.delete(label);btn.classList.remove('selected')}
+  else{symptoms.add(label);btn.classList.add('selected')}
+}
+
+function showLoading(elId){
+  const el=document.getElementById(elId);
+  el.style.display='block';
+  el.innerHTML='<div class="loading-row"><div class="spinner"></div> Analyzing...</div>';
+}
+
+function showResult(elId,html){
+  const el=document.getElementById(elId);
+  el.style.display='block';
+  el.innerHTML='<div class="result-text">'+html+'</div>';
+}
+
+// ── ADVISOR ────────────────────────────────────────────
+function runAdvisor(){
+  const org=document.getElementById('organism').value;
+  showLoading('res-adv');
+  document.getElementById('btn-adv').disabled=true;
+
+  setTimeout(()=>{
+    const {issues,good}=KB.assess(org,P.temp,P.ph,P.ox,P.rpm);
+    const recs=KB.recommend(org,P.temp,P.ph,P.ox,P.rpm);
+    const score=Math.round((good.length/(good.length+issues.length))*100);
+
+    let html=`<strong style="font-size:15px;color:var(--dark)">🔬 Assessment for ${org}</strong>\n`;
+    html+=`<span style="font-size:12px;color:var(--text-muted)">Overall parameter score: <strong style="color:${score>=75?'var(--green)':score>=50?'var(--amber)':'var(--coral)'}">${score}%</strong></span>\n\n`;
+
+    if(good.length){html+=`<strong>✅ What's working well:</strong>\n${good.map(g=>'  '+g).join('\n')}\n\n`;}
+    if(issues.length){html+=`<strong>⚠️ Issues detected:</strong>\n${issues.map(i=>'  • '+i).join('\n')}\n\n`;}
+    html+=`<strong>💡 Recommendations:</strong>\n${recs.map(r=>'  '+r).join('\n')}\n\n`;
+    html+=`<span style="font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:8px;display:block;margin-top:4px">Based on established bioprocess engineering principles for ${org}. Always validate against your specific strain and media composition.</span>`;
+
+    showResult('res-adv',html);
+    document.getElementById('btn-adv').disabled=false;
+  },800);
+}
+
+// ── TROUBLESHOOTER ─────────────────────────────────────
+function runTrouble(){
+  const sel=[...symptoms];
+  const custom=document.getElementById('custom-symptom').value.trim();
+  if(!sel.length&&!custom){alert('Please select at least one symptom.');return;}
+  showLoading('res-trb');
+  document.getElementById('btn-trb').disabled=true;
+
+  setTimeout(()=>{
+    let html=`<strong style="font-size:15px;color:var(--dark)">🩺 Fermentation Diagnosis Report</strong>\n\n`;
+
+    if(sel.length){
+      sel.forEach(s=>{
+        const kb=TROUBLE_KB[s];
+        if(!kb)return;
+        html+=`<strong style="color:var(--coral)">⚠️ ${s}</strong>\n\n`;
+        html+=`<strong>Root causes:</strong>\n${kb.causes.map((c,i)=>`  ${i+1}. ${c}`).join('\n')}\n\n`;
+        html+=`<strong>Immediate actions:</strong>\n${kb.actions.map((a,i)=>`  ${i+1}. ${a}`).join('\n')}\n\n`;
+        html+=`<strong>Prevention for next run:</strong>\n${kb.prevent.map(p=>`  • ${p}`).join('\n')}\n\n`;
+        html+=`<hr style="border:none;border-top:1px solid var(--border);margin:12px 0">\n`;
+      });
+    }
+
+    if(custom){
+      html+=`<strong style="color:var(--amber)">📝 Your additional notes:</strong>\n`;
+      html+=`  "${custom}"\n\n`;
+      html+=`<strong>General advice:</strong>\n`;
+      html+=`  1. Document this observation with timestamp in your lab notebook.\n`;
+      html+=`  2. Take a physical sample immediately for off-line analysis.\n`;
+      html+=`  3. Review the last 2–4 hours of your process data logs.\n`;
+      html+=`  4. Cross-check with your SOP for this organism/process.\n\n`;
+    }
+
+    html+=`<strong style="color:var(--green)">🚨 When to abort the run:</strong>\n`;
+    html+=`  • Confirmed contamination (abnormal smell, color change, unexpected morphology)\n`;
+    html+=`  • Temperature excursion >3°C above optimal for >1 hour\n`;
+    html+=`  • DO at zero for >30 min with no recovery despite interventions\n`;
+    html+=`  • pH out of range by >1.0 units with no controller response\n\n`;
+    html+=`<span style="font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:8px;display:block">Always consult your supervisor and SOPs for critical decisions. This tool provides guidance based on standard bioprocess troubleshooting principles.</span>`;
+
+    showResult('res-trb',html);
+    document.getElementById('btn-trb').disabled=false;
+  },900);
+}
+
+updateBadges();
+</script>
+</body>
+</html>
