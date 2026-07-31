@@ -4,7 +4,7 @@
 
 AI-powered knowledge-based expert system for fermentation process optimization and fault diagnosis in bioreactor operations.
 
- Live Demo: https://yourusername.github.io/fermentai
+ Live Demo: 
 
 About
 FermentAI is a web-based decision support tool built as a  research project in Bioprocess Engineering. It helps researchers and students make fast, expert-level    decisions during bioreactor operations — without needing a specialist present.
@@ -101,8 +101,8 @@ Approach	Knowledge-Based Expert System (KBES)
 
 Sabarish.G
 B.tech Biotechnology 
-📧 [your.email@university.ac.in]
-🔗 GitHub: https://github.com/yourusername
+📧 
+🔗 GitHub: 
 
 🙏 Acknowledgements
 
